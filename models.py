@@ -1,7 +1,8 @@
 from datetime import datetime
 from random import randint
-import settings
+
 from exceptions import EnemyDown, GameOver
+import settings
 
 
 class Enemy:
@@ -37,45 +38,43 @@ class Player:
         else:
             return -1
 
-    def sort_score(self):
+    @staticmethod
+    def sort_score():
         result = []
-        f = open('./scores.txt', 'r')
-        for line in f:
+        file = open('./scores.txt', 'r')
+        for line in file:
             result.append(line.split('|'))
-        f.close()
-        result.sort(key=lambda item: item[2], reverse=True)
-        f = open('./scores.txt', 'w')
+        file.close()
+        result.sort(key=lambda i: i[2], reverse=True)
+        file = open('./scores.txt', 'w')
         for item in result:
             if (result.index(item) + 1) <= 10:
                 item[0] = str(result.index(item) + 1)
-                f.write("|".join(item))
-        f.close()
-
-
-
+                file.write("|".join(item))
+        file.close()
 
     def decrease_lives(self):
         self.lives -= 1
         if self.lives == 0:
             print('Enemy win! :(')
             print(f'Your score is {self.score}')
-            f = open('./scores.txt', 'a')
-            f.write(f'0 | {self.name} | {self.score} | {datetime.today()} \n')
-            f.close()
+            file = open('./scores.txt', 'a')
+            file.write(f'0 | {self.name} | {self.score} | {datetime.today()} \n')
+            file.close()
             self.sort_score()
             raise GameOver
 
     @staticmethod
     def show_statistics(player, enemy):
-        print(f'Your lives: {player.lives} | Enemy lives: {enemy.lives} | Enemy level: {enemy.level}')
+        print(f'Your lives: {player.lives} | '
+              f'Enemy lives: {enemy.lives} | '
+              f'Enemy level: {enemy.level}')
         print('_' * 50)
-
 
     @staticmethod
     def validate_attack(user_value):
         if user_value > 3 or user_value < 1:
             raise ValueError
-
 
     def attack(self, enemy_obj):
         attack = int(input(
@@ -93,7 +92,6 @@ class Player:
             print("You missed!")
         self.show_statistics(self, enemy_obj)
 
-
     def defence(self, enemy_obj):
         attack = int(input(
             'Choose a character for defence: 1 - wizard, 2 - warrior, 3 - robber.'
@@ -109,4 +107,3 @@ class Player:
         else:
             print("Enemy missed!")
         self.show_statistics(self, enemy_obj)
-

@@ -1,5 +1,5 @@
-from models import Player, Enemy
 from exceptions import EnemyDown, GameOver
+from models import Player, Enemy
 import settings
 
 
@@ -18,10 +18,10 @@ def play():
         elif command == 'exit':
             break
         elif command == 'show scores':
-            f = open('./scores.txt', 'r')
-            for line in f:
+            file = open('./scores.txt', 'r')
+            for line in file:
                 print(line)
-            f.close()
+            file.close()
             continue
 
         while True:
@@ -29,7 +29,9 @@ def play():
                 player.attack(enemy)
                 player.defence(enemy)
             except EnemyDown:
-                print(f'Your lives: {player.lives} | Enemy lives: {enemy.lives} | Enemy level: {enemy.level}')
+                print(f'Your lives: {player.lives} | '
+                      f'Enemy lives: {enemy.lives} | '
+                      f'Enemy level: {enemy.level}')
                 print('*' * 50)
                 enemy = Enemy(enemy.level + 1)
                 player.score += 5
@@ -42,7 +44,7 @@ if __name__ == '__main__':
         play()
     except GameOver:
         pass
-    except  KeyboardInterrupt:
+    except KeyboardInterrupt:
         pass
     finally:
         print("Good bye!")
